@@ -7,7 +7,7 @@ override_dh_auto_install:
 	mkdir -p debian/pve7-usb-automount/etc/pve-usb-automount
 	mkdir -p debian/pve7-usb-automount/usr/bin
 	mkdir -p debian/pve7-usb-automount/etc/systemd/system
-	cp ../../etc/pve-usb-automount/main.conf debian/pve7-usb-automount/etc/pve-usb-automount/.
+	cp etc/pve-usb-automount/main.conf debian/pve7-usb-automount/etc/pve-usb-automount/.
 	cp -a systemd/pve7-usb-automount.service debian/pve7-usb-automount/etc/systemd/system/.
 	cp pve7_usb_automount.py debian/pve7-usb-automount/usr/bin/.
 

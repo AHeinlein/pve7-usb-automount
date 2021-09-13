@@ -1,7 +1,7 @@
 Source: pve7-usb-automount
 Section: utils
 Priority: optional
-Maintainer: Rene Hadler <rene.hadler@iteas.at>
+Maintainer: Andreas Heinlein <aheinlein@gmx.com>
 Build-Depends: debhelper (>= 8.0.0)
 
 Package: pve7-usb-automount

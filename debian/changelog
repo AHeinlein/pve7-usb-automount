@@ -1,3 +1,10 @@
+pve7-usb-automount (0.6-1) bullseye; urgency=medium
+
+  [ Andreas Heinlein ]
+  * Add config options for mount options and mounting by label
+
+ -- root <root@admin2-desktop>  Mon, 13 Sep 2021 09:59:06 +0000
+
 pve7-usb-automount (0.5-2) precise; urgency=low
 
   * For changes see git log
