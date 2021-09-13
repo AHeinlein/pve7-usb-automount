@@ -11,7 +11,7 @@ import syslog
 import subprocess
 import json
 
-from os.path import exists
+from os.path import exists, basename
 from pyudev.version import __version_info__
 
 from PySide2.QtCore import *
@@ -134,6 +134,7 @@ class udevObserver(QObject):
 
     def umountDevice(self, device):
         mountpath = self.getMountPathForDevice(device)
+        name = basename(mountpath)
         if mountpath == "":
             syslog.syslog("Mount dir for device %s was not found" % device)
             return
@@ -142,7 +143,7 @@ class udevObserver(QObject):
         p.wait(timeout=10)
         if p.returncode == 0:
             syslog.syslog("Device %s was unmounted" % (device))
-            subprocess.Popen("pvesm remove 'usb-%s'" % (device), stdout=subprocess.PIPE, shell=True)
+            subprocess.Popen("pvesm remove 'usb-%s'" % (name), stdout=subprocess.PIPE, shell=True)
             if exists(mountpath):
                 subprocess.Popen("rmdir '%s'" % mountpath, stdout=subprocess.PIPE, shell=True)
         else:
