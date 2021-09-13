@@ -20,6 +20,8 @@ config = configparser.ConfigParser()
 config.read('/etc/pve-usb-automount/main.conf')
 
 MAX_FILES = config.get("MAIN", "MAX_FILES", fallback=3)
+MOUNT_OPTS = config.get("MAIN", "MOUNT_OPTS", fallback="sync")
+USE_LABEL = config.get("MAIN", "USE_LABEL", fallback=0)
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 syslog.openlog(ident="pve7-usb-automount")
@@ -108,8 +110,12 @@ class udevObserver(QObject):
 
         if "label" in device and device["label"] != None:
             device["label"] = device["label"].replace(" ", "_")
-        #mountpath = "/media/%s" % device["label"] if "label" in device and device["label"] != None else "/media/%s" % device["kname"]
-        mountpath = "/media/%s" % device["kname"]
+        
+        if USE_LABEL:
+            name = device["label"] if "label" in device and device["label"] != None else device["kname"]
+        else:
+            name = device["kname"]
+        mountpath = "/media/%s" % name
         syslog.syslog("Create mount dir <%s>" % mountpath)
         if not exists(mountpath):
             p = subprocess.Popen("mkdir -p '%s'" % mountpath, stdout=subprocess.PIPE, shell=True)
@@ -118,11 +124,11 @@ class udevObserver(QObject):
                 syslog.syslog("Mount dir could not be created")
                 return
 
-        p = subprocess.Popen("mount -o sync /dev/%s '%s'" % (device["kname"], mountpath), stdout=subprocess.PIPE, shell=True)
+        p = subprocess.Popen("mount -o %s /dev/%s '%s'" % (MOUNT_OPTS, device["kname"], mountpath), stdout=subprocess.PIPE, shell=True)
         p.wait(timeout=10)
         if p.returncode == 0:
             syslog.syslog("Device %s was mounted on %s" % (device["kname"], mountpath))
-            subprocess.Popen("pvesm add dir 'usb-%s' -path '%s' -maxfiles %s -content vztmpl,iso,backup -is_mountpoint 1" % (device["kname"], mountpath, MAX_FILES), stdout=subprocess.PIPE, shell=True)
+            subprocess.Popen("pvesm add dir 'usb-%s' -path '%s' -maxfiles %s -content vztmpl,iso,backup -is_mountpoint 1" % (name, mountpath, MAX_FILES), stdout=subprocess.PIPE, shell=True)
         else:
             syslog.syslog("Device %s was NOT mounted %s" % (device["kname"], mountpath))
 
