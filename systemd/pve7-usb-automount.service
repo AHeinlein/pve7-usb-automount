@@ -1,0 +1,10 @@
+[Unit]
+Description=PVE7 automount service
+After=systemd-udevd.service
+Requires=systemd-udevd.service
+DefaultDependencies=no
+[Service]
+ExecStart=/usr/bin/pve7_usb_automount.py
+Restart=always
+[Install]
+WantedBy=multi-user.target

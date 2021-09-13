@@ -1,0 +1,13 @@
+Source: pve7-usb-automount
+Section: utils
+Priority: optional
+Maintainer: Rene Hadler <rene.hadler@iteas.at>
+Build-Depends: debhelper (>= 8.0.0)
+
+Package: pve7-usb-automount
+Architecture: all
+Depends: python3-pyinotify, python3-pyside2.qtcore, python3-pyudev
+Conflicts: pve5-usb-automount, pve6-usb-automount
+Replaces: pve5-usb-automount, pve6-usb-automount
+Provides: pve7-usb-automount
+Description: Adds USB-Automount feature to PVE7
